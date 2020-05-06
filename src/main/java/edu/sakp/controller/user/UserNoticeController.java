@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
 
-/**
- * 健康指南
- */
 @Controller("UserNoticeController")
 @RequestMapping("/user/notice")
 public class UserNoticeController {
