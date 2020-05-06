@@ -31,20 +31,8 @@
 
 			<td style="width:150px;">
                 <span>标题：</span>
-                <input type="text" id="type" name="type" class="input_0" />
+                <input type="text" id="name" name="name" class="input_0" />
             </td>
-			<td style="width:150px;">
-				<span>简介：</span>
-				<input type="text" id="tip" name="tip" class="input_0" />
-			</td>
-			<td style="width:150px;">
-				<span>包括：</span>
-				<input type="text" id="include" name="include" class="input_0" />
-			</td>
-			<td style="width:150px;">
-				<span>投放要求：</span>
-				<input type="text" id="ask" name="ask" class="input_0" />
-			</td>
 			<td style="">
 			<div class="layui-btn-group">
 			  <button class="layui-btn" onclick="search()">查询</button>
@@ -67,7 +55,7 @@ $(function(){
 	//表格
 	$('#exampleTableUser').mmGrid({
     	root:'rows',// 和后台数据保存列一致,对应MMGridPageVoBean rows
-		url:"/admin/type/getAllByLimit",
+		url:"/admin/batch/getAllByLimit",
     	width: 'auto',
     	height: 'auto',
     	//checkCol: true,
@@ -77,17 +65,13 @@ $(function(){
         indexCol: true,  //索引列
         params:function(){
         	var param = new Object();
-        	param.tip = $.trim($("#tip").val());
-        	param.include = $.trim($("#include").val());
-        	param.ask = $.trim($("#ask").val());
-        	param.type = $.trim($("#type").val());
+        	param.name = $.trim($("#name").val());
         	return param;
         },
         cols: [{title: 'ID', name: 'id', width:60, hidden:true},
-			   {title: '标题', name: 'type', width:30},
-			   {title: '简介', name: 'tip', width:60},
-			   {title: '主要包含', name: 'include', width:60},
-			   {title: '投放要求', name: 'ask', width:60},
+			   {title: '标题', name: 'name', width:30},
+			   {title: '开始时间', name: 'startTime', width:60},
+			   {title: '结束时间', name: 'endTime', width:60},
 			   {title: '操作', name: 'op', width:20, renderer:function(val, item, rowIndex){
 				   var buttonStr ='<span class=" layui-btn layui-btn-danger layui-btn-sm" onclick="deleteRowOne('+"\'"+item.id+"\'"+')" >删除</span>'+
 						   '<span class="layui-btn layui-btn-sm" onclick="updateOne('+"\'"+item.id+"\'"+')" >修改</span>';
@@ -120,7 +104,7 @@ function deleteRowOne(id){
     		type:"POST",
     		async:true,  //默认true,异步
     		data:param,
-    		url:"/admin/type/del",
+    		url:"/admin/batch/del",
     		success:function(data){
     			if(data == "SUCCESS"){
     				layer.alert('删除成功！', {icon: 1}, function(indexOk){
@@ -142,7 +126,7 @@ function addRow(){
 	    type: 2,
 	    title: '增加',
 	    area: ['70%', '80%'],
-	    content: '/admin/type/add' //iframe的url
+	    content: '/admin/batch/add' //iframe的url
 	});
 }
 
@@ -151,7 +135,7 @@ function updateOne(id){
 		type: 2,
 		title: '修改',
 		area: ['70%', '80%'],
-		content: '/admin/type/updateOne?id='+id //iframe的url
+		content: '/admin/batch/updateOne?id='+id //iframe的url
 	});
 }
 </script>

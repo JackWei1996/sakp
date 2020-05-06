@@ -1,0 +1,166 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8">
+    <title>用户填写</title>
+    <script type="text/javascript" th:src="@{/js/jquery/jquery-3.3.1.js}" src="js/jquery/jquery-3.3.1.js" ></script>
+    <link th:href="@{/css/login.css}" href="css/login.css" rel="stylesheet" type="text/css" media="all"/>
+    <link rel="stylesheet" th:href="@{/css/cloudstyle.css}" href="css/cloudstyle.css"/>
+    <!-- layer -->
+    <link type="text/css" rel="stylesheet" th:href="@{/plug/layui/css/layui.css}" media="all"/>
+    <script type="text/javascript" th:src="@{/plug/layui/layui.js}"  src="plug/layui/layui.js" ></script>
+    <style type="text/css">
+        input::-webkit-input-placeholder {
+            color:#fff;
+        }
+        .div-a{ position:fixed; left:20px; top:20px; background:#F00;padding: 10px;color: #FFF;z-index: 999}
+        .div-b{ position:fixed; right:20px; top:20px; background:#F00;padding: 10px;color: #FFF;z-index: 999}
+    </style>
+
+</head>
+
+<body onkeydown="key_down(event.keyCode);">
+<div class="sky" style="position:absolute; width:100%; top:0px;height:100%;opacity:0.75;"></div>
+<div class="login-form" style="position:relative;">
+    <h1><a  href='#' target='view_window' style='color:#FFF'>知识点统计分析系统</a></h1>
+    <div class="login-top">
+        <form class="layui-form">
+            <div class="login-ic">
+                <i class="layui-icon layui-icon-username" style="font-size: 30px; color: #fff;"></i>
+                <input type="text"  placeholder="学号" id="u"/>
+                <div class="clear"> </div>
+            </div>
+            <div class="login-ic">
+                <i class="layui-icon layui-icon-password" style="font-size: 30px; color: #fff;"></i>
+                <input type="text"  placeholder="姓名" id="n" name="n"  />
+                <div class="clear"> </div>
+            </div>
+            <div class="login-ic">
+                <i class="layui-icon layui-icon-notice" style="font-size: 30px; color: #fff;"></i>
+                <input type="text"  placeholder="内容(多个由英文逗号隔开)" id="c" name="c"  />
+                <div class="clear"> </div>
+            </div>
+<!--            <div class="login-ic">-->
+<!--                <i class="layui-icon layui-icon-table" style="font-size: 35px; color: #FFF;"></i>-->
+<!--                <select lay-filter="zwSelect" lay-verify="required" id = "zw3" style="width: 400px;height: 38px; margin-left: 4px;color: #000;opacity:0.7;">-->
+<!--                </select>-->
+<!--                <div class="clear"> </div>-->
+<!--            </div>-->
+            <div class="log-bwn">
+                <input type="button"  id="login1" value="提交" onclick="tijiao()">
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+
+
+
+<script type="text/javascript">
+    // var names = [[${names}]];
+    // var ids = [[${ids}]];
+    function key_down(num){
+        if(num == 13) {
+            tijiao();
+        }
+    }
+
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var laydate = layui.laydate;
+        var form = layui.form;
+
+        form.on('select(zwSelect)', function(data){
+            $("#login1").removeAttr("disabled");
+            $("#login1").css({'background-color':'#ff3366'});
+            $("#login2").removeAttr("disabled");
+            $("#login2").css({'background-color':'#ffd400'});
+        });
+
+        //自定义验证规则  
+        form.verify({
+            phone: [/^1[3|4|5|7|8]\d{9}$/, '手机必须11位，只能是数字！']
+            ,email: [/^[a-z0-9._%-]+@([a-z0-9-]+\.)+[a-z]{2,4}$|^1[3|4|5|7|8]\d{9}$/, '邮箱格式不对']
+        });
+    });
+
+
+    function tijiao(){
+        var u = $("#u").val();
+        var n = $("#n").val();
+        var c = $("#c").val();
+
+        if(n&&u&&c){
+            console.log(n);
+            console.log(u);
+            console.log(c);
+            $.ajax({
+                type:"POST",
+                async:true,  //默认true,异步
+                data:{"name":n,"stuNo":u,"content":c},
+                url:"/statistics/doAdd",
+                beforeSend: function () {
+                    layer.msg('拼命提交中...', {icon: 16,shade: [0.5, '#f5f5f5'],scrollbar: false,offset: 'auto', time:600000});
+                },
+                success:function(data){
+                    if(data == "SUCCESS"){
+                        layer.alert('提交成功！', {icon: 1}, function(indexOk){
+                            layer.close(indexOk);
+                            layer.closeAll();
+                            parent.layer.closeAll();
+                        });
+                    }else{
+                        //重新登录
+                        layer.alert('提交失败！', {icon: 2});
+                    }
+                }
+            });
+        }else{
+            if(!u){
+                layer.open({
+                    title: '错误提示'
+                    ,content: '请输入学号'
+                });
+            }else if(!n){
+                layer.open({
+                    title: '错误提示'
+                    ,content: '请输入姓名'
+                });
+            }else if(!c){
+                layer.open({
+                    title: '错误提示'
+                    ,content: '请输入内容'
+                });
+            }
+        }
+        $("#login1").attr("disabled","disabled");
+        $("#login1").css({'background-color':'#708090'});
+    }
+
+    $(function(){
+        /*$.ajax({
+            type:"POST",
+            async:true,  //默认true,异步
+            data:"",
+            url:"/user/batch/getAll",
+            success:function(data){
+                if (data){
+                    console.log(data);
+                    var html = "";
+                    for(var i=0;i<data.length;i++){
+                        html +='<option value="'+data[i].id+'">'+data[i].name+'</option>';
+                    }
+                    console.log(html);
+                    $('#zw3').html(html);
+                }
+            }
+        });*/
+
+        $('body').on('input propertychange', '.login-ic', function(event) {
+            $("#login1").removeAttr("disabled");
+            $("#login1").css({'background-color':'red'});
+        });
+    });
+</script>

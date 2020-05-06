@@ -41,7 +41,7 @@
 </style>
 
 <script type="text/javascript"  th:inline="javascript">
-	var gtype = [[${gtype}]];
+	var gtype = [[${b}]];
 
 $(function(){
 	//返回按钮
@@ -52,24 +52,20 @@ $(function(){
 	});
 	if (gtype){
 		//回填值
-		$("#tip").val(gtype.tip);
-		$("#include").val(gtype.include);
-		$("#ask").val(gtype.ask);
-		$("#type").val(gtype.type);
+		$("#name").val(gtype.name);
+		$("#startTime").val(gtype.startTime);
+		$("#endTime").val(gtype.endTime);
 	}
 	//返回按钮
 	$("#saveBtu").click(function(){
 		var param = new Object();
-		param.tip = $.trim($("#tip").val());
-		param.include = $.trim($("#include").val());
-		param.ask = $.trim($("#ask").val());
-		param.type = $.trim($("#type").val());
+		param.name = $.trim($("#name").val());
 		console.log(param);
-		var urlStr = "/admin/type/doAdd";
+		var urlStr = "/admin/batch/doAdd";
 		if(gtype){
 			//修改
 			param.id = gtype.id;
-			urlStr = "/admin/type/update";
+			urlStr = "/admin/batch/update";
 		}
 
 		layer.confirm('确认保存吗？', {icon: 3, title:'提示'}, function(index){
@@ -118,34 +114,7 @@ function closeSelf(){
 					<span class="text_ad_0">标题：</span>
 				</td>
 				<td>
-					<input id="type" type="text" name="type" class="input_0" value="" />
-					<span class="validation_span"></span>
-				</td>
-			</tr>
-			<tr style="">
-				<td align="right" >
-					<span class="text_ad_0">简介：</span>
-				</td>
-				<td>
-					<textarea id="tip" name="tip"  rows="5" cols="25"></textarea>
-					<span class="validation_span"></span>
-				</td>
-			</tr>
-			<tr style="">
-				<td align="right" >
-					<span class="text_ad_0">主要包括：</span>
-				</td>
-				<td>
-					<textarea id="include" name="include"  rows="5" cols="25"></textarea>
-					<span class="validation_span"></span>
-				</td>
-			</tr>
-			<tr style="">
-				<td align="right" >
-					<span class="text_ad_0">投放要求：</span>
-				</td>
-				<td>
-					<textarea id="ask" name="ask"  rows="5" cols="25"></textarea>
+					<input id="name" type="text" name="name" class="input_0" value="" />
 					<span class="validation_span"></span>
 				</td>
 			</tr>
